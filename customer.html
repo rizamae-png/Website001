@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #121212; }
+        .navbar { margin-bottom: 30px; }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-secondary">
+        <div class="container">
+            <a class="navbar-brand" href="#">Customer Portal</a>
+            <div class="d-flex">
+                <span class="navbar-text me-3">Welcome, User</span>
+                <button class="btn btn-outline-danger btn-sm" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main  -->
+    <div class="container">
+        <div class="row">
+            
+            <!-- LEFT: Print Order Submission Form -->
+            <div class="col-md-5 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">New Print Order</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="orderForm" onsubmit="submitOrder(event)">
+                            
+                            <!-- File Uploading -->
+                            <div class="mb-3">
+                                <label for="fileUpload" class="form-label">Upload Document</label>
+                                <input class="form-control" type="file" id="fileUpload" required>
+                            </div>
+
+                            <!-- Order Customization: Paper Size -->
+                            <div class="mb-3">
+                                <label for="paperSize" class="form-label">Paper Size</label>
+                                <select class="form-select" id="paperSize">
+                                    <option value="A4">A4 (Standard)</option>
+                                    <option value="Letter">Letter (Short)</option>
+                                    <option value="Legal">Legal (Long)</option>
+                                </select>
+                            </div>
+
+                            <!-- Order Customization: Paper Type -->
+                            <div class="mb-3">
+                                <label for="paperType" class="form-label">Paper Type</label>
+                                <select class="form-select" id="paperType">
+                                    <option value="Regular">Regular (70gsm)</option>
+                                    <option value="Thick">Thick (80gsm)</option>
+                                    <option value="Glossy">Glossy Photo Paper</option>
+                                </select>
+                            </div>
+
+                            <!-- Quantity Selection -->
+                            <div class="mb-3">
+                                <label for="quantity" class="form-label">Quantity (Copies)</label>
+                                <input type="number" class="form-control" id="quantity" min="1" value="1" required>
+                            </div>
+
+                            <button type="submit" class="btn btn-success w-100">Submit Order</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT: Order History & Status Tracking -->
+            <div class="col-md-7">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-secondary text-white">
+                        <h5 class="mb-0">Order History & Tracking</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-dark align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Details</th>
+                                        <th>Qty</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="orderTableBody">
+                                    <!-- mock data for display -->
+                                    <tr>
+                                        <td>#1001</td>
+                                        <td>Chapter1.pdf<br><small class="text-muted">A4 | Regular</small></td>
+                                        <td>3</td>
+                                        <td><span class="badge bg-warning text-dark">Pending</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>#1002</td>
+                                        <td>Presentation.pptx<br><small class="text-muted">Letter | Glossy</small></td>
+                                        <td>1</td>
+                                        <td><span class="badge bg-info text-dark">Printing</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>#1003</td>
+                                        <td>Resume.docx<br><small class="text-muted">A4 | Thick</small></td>
+                                        <td>5</td>
+                                        <td><span class="badge bg-success">Ready for Pickup</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- JavaScript to handle form submission and logout -->
+    <script>
+        function logout() {
+            // Sends user back to login page
+            window.location.href = 'index.html';
+        }
+
+        function submitOrder(event) {
+            // Prevents the page from reloading when the form is submitted
+            event.preventDefault(); 
+            
+            // Get values from the form
+            let size = document.getElementById('paperSize').value;
+            let type = document.getElementById('paperType').value;
+            let qty = document.getElementById('quantity').value;
+            let filename = document.getElementById('fileUpload').value.split('\\').pop(); // Gets just the file name
+
+            if(!filename) {
+                alert("Please select a file.");
+                return;
+            }
+
+            // Create a new table row dynamically to simulate the order being added to history
+            let newRow = `
+                <tr>
+                    <td>#New</td>
+                    <td>${filename}<br><small class="text-muted">${size} | ${type}</small></td>
+                    <td>${qty}</td>
+                    <td><span class="badge bg-warning text-dark">Pending</span></td>
+                </tr>
+            `;
+
+            // Append the new row to the top of the table
+            document.getElementById('orderTableBody').insertAdjacentHTML('afterbegin', newRow);
+
+            // Show success message and reset form
+            alert("Print order submitted successfully!");
+            document.getElementById('orderForm').reset();
+        }
+    </script>
+</body>
+</html>
