@@ -9,6 +9,21 @@
     <style>
         body { background-color: #121212; }
         .navbar { margin-bottom: 30px; }
+        .required-mark { color: #ff6b6b; }
+
+        /* Success message + new order row show after submit */
+        #order-success {
+            display: none;
+        }
+        #order-success:target {
+            display: block;
+        }
+        .new-order {
+            display: none;
+        }
+        body:has(#order-success:target) .new-order {
+            display: table-row;
+        }
     </style>
 </head>
 <body>
@@ -19,15 +34,21 @@
             <a class="navbar-brand" href="#">Customer Portal</a>
             <div class="d-flex">
                 <span class="navbar-text me-3">Welcome, User</span>
-                <button class="btn btn-outline-danger btn-sm" onclick="logout()">Logout</button>
+                <a href="index.html" class="btn btn-outline-danger btn-sm">Logout</a>
             </div>
         </div>
     </nav>
 
-    <!-- Main  -->
+    <!-- Main -->
     <div class="container">
+
+        <!-- Shown after a successful order submit -->
+        <div id="order-success" class="alert alert-success">
+            Print order submitted successfully!
+        </div>
+
         <div class="row">
-            
+
             <!-- LEFT: Print Order Submission Form -->
             <div class="col-md-5 mb-4">
                 <div class="card shadow-sm">
@@ -35,18 +56,20 @@
                         <h5 class="mb-0">New Print Order</h5>
                     </div>
                     <div class="card-body">
-                        <form id="orderForm" onsubmit="submitOrder(event)">
-                            
+                        <form action="#order-success">
+
                             <!-- File Uploading -->
                             <div class="mb-3">
-                                <label for="fileUpload" class="form-label">Upload Document</label>
-                                <input class="form-control" type="file" id="fileUpload" required>
+                                <label for="fileUpload" class="form-label">
+                                    Upload Document <span class="required-mark">*</span>
+                                </label>
+                                <input class="form-control" type="file" id="fileUpload" name="fileUpload" required>
                             </div>
 
                             <!-- Order Customization: Paper Size -->
                             <div class="mb-3">
                                 <label for="paperSize" class="form-label">Paper Size</label>
-                                <select class="form-select" id="paperSize">
+                                <select class="form-select" id="paperSize" name="paperSize">
                                     <option value="A4">A4 (Standard)</option>
                                     <option value="Letter">Letter (Short)</option>
                                     <option value="Legal">Legal (Long)</option>
@@ -56,7 +79,7 @@
                             <!-- Order Customization: Paper Type -->
                             <div class="mb-3">
                                 <label for="paperType" class="form-label">Paper Type</label>
-                                <select class="form-select" id="paperType">
+                                <select class="form-select" id="paperType" name="paperType">
                                     <option value="Regular">Regular (70gsm)</option>
                                     <option value="Thick">Thick (80gsm)</option>
                                     <option value="Glossy">Glossy Photo Paper</option>
@@ -65,8 +88,18 @@
 
                             <!-- Quantity Selection -->
                             <div class="mb-3">
-                                <label for="quantity" class="form-label">Quantity (Copies)</label>
-                                <input type="number" class="form-control" id="quantity" min="1" value="1" required>
+                                <label for="quantity" class="form-label">
+                                    Quantity (Copies) <span class="required-mark">*</span>
+                                </label>
+                                <input
+                                    type="number"
+                                    class="form-control"
+                                    id="quantity"
+                                    name="quantity"
+                                    min="1"
+                                    value="1"
+                                    required
+                                >
                             </div>
 
                             <button type="submit" class="btn btn-success w-100">Submit Order</button>
@@ -92,7 +125,14 @@
                                         <th>Status</th>
                                     </tr>
                                 </thead>
-                                <tbody id="orderTableBody">
+                                <tbody>
+                                    <!-- Appears after submit (same idea as the old JS new row) -->
+                                    <tr class="new-order">
+                                        <td>#New</td>
+                                        <td>Uploaded document<br><small class="text-muted">Pending review</small></td>
+                                        <td>—</td>
+                                        <td><span class="badge bg-warning text-dark">Pending</span></td>
+                                    </tr>
                                     <!-- mock data for display -->
                                     <tr>
                                         <td>#1001</td>
@@ -122,45 +162,5 @@
         </div>
     </div>
 
-    <!-- JavaScript to handle form submission and logout -->
-    <script>
-        function logout() {
-            // Sends user back to login page
-            window.location.href = 'index.html';
-        }
-
-        function submitOrder(event) {
-            // Prevents the page from reloading when the form is submitted
-            event.preventDefault(); 
-            
-            // Get values from the form
-            let size = document.getElementById('paperSize').value;
-            let type = document.getElementById('paperType').value;
-            let qty = document.getElementById('quantity').value;
-            let filename = document.getElementById('fileUpload').value.split('\\').pop(); // Gets just the file name
-
-            if(!filename) {
-                alert("Please select a file.");
-                return;
-            }
-
-            // Create a new table row dynamically to simulate the order being added to history
-            let newRow = `
-                <tr>
-                    <td>#New</td>
-                    <td>${filename}<br><small class="text-muted">${size} | ${type}</small></td>
-                    <td>${qty}</td>
-                    <td><span class="badge bg-warning text-dark">Pending</span></td>
-                </tr>
-            `;
-
-            // Append the new row to the top of the table
-            document.getElementById('orderTableBody').insertAdjacentHTML('afterbegin', newRow);
-
-            // Show success message and reset form
-            alert("Print order submitted successfully!");
-            document.getElementById('orderForm').reset();
-        }
-    </script>
 </body>
 </html>

@@ -9,6 +9,20 @@
     <style>
         body { background-color: #121212; }
         .navbar { margin-bottom: 30px; }
+
+        /* Success messages show after a status is saved */
+        .save-msg {
+            display: none;
+        }
+        .save-msg:target {
+            display: block;
+        }
+
+        /* Green highlight when Completed is saved (same idea as the old JS) */
+        body:has(#saved-1001-Completed:target) #row-1001,
+        body:has(#saved-1002-Completed:target) #row-1002 {
+            --bs-table-bg: #198754;
+        }
     </style>
 </head>
 <body>
@@ -18,18 +32,45 @@
         <div class="container">
             <a class="navbar-brand text-info" href="#">Admin Control Panel</a>
             <div class="d-flex">
-                <button class="btn btn-outline-danger btn-sm" onclick="logout()">Logout</button>
+                <a href="index.html" class="btn btn-outline-danger btn-sm">Logout</a>
             </div>
         </div>
     </nav>
 
     <!-- Main Content Container -->
     <div class="container">
-        
+
         <!-- Header for Admin Actions -->
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h3>Order Management</h3>
             <span class="text-muted">Review and update customer orders</span>
+        </div>
+
+        <!-- Success messages (replaces the old alert) -->
+        <div id="saved-1001-Pending" class="alert alert-success save-msg">
+            Success! Order #1001 status has been updated to: Pending
+        </div>
+        <div id="saved-1001-Printing" class="alert alert-success save-msg">
+            Success! Order #1001 status has been updated to: Printing
+        </div>
+        <div id="saved-1001-Ready" class="alert alert-success save-msg">
+            Success! Order #1001 status has been updated to: Ready for Pickup
+        </div>
+        <div id="saved-1001-Completed" class="alert alert-success save-msg">
+            Success! Order #1001 status has been updated to: Completed
+        </div>
+
+        <div id="saved-1002-Pending" class="alert alert-success save-msg">
+            Success! Order #1002 status has been updated to: Pending
+        </div>
+        <div id="saved-1002-Printing" class="alert alert-success save-msg">
+            Success! Order #1002 status has been updated to: Printing
+        </div>
+        <div id="saved-1002-Ready" class="alert alert-success save-msg">
+            Success! Order #1002 status has been updated to: Ready for Pickup
+        </div>
+        <div id="saved-1002-Completed" class="alert alert-success save-msg">
+            Success! Order #1002 status has been updated to: Completed
         </div>
 
         <div class="card shadow-sm">
@@ -44,7 +85,6 @@
                                 <th>File & Details</th>
                                 <th>Quantity</th>
                                 <th>Update Order Status</th>
-                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -55,19 +95,13 @@
                                 <td>Chapter1.pdf<br><small class="text-muted">A4 | Regular</small></td>
                                 <td>3</td>
                                 <td>
-                                    <!-- Dropdown for Update Order Status -->
-                                    <select class="form-select form-select-sm" id="status-1001">
-                                        <option value="Pending" selected>Pending</option>
-                                        <option value="Printing">Printing</option>
-                                        <option value="Ready">Ready for Pickup</option>
-                                        <option value="Completed">Completed</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <button class="btn btn-primary btn-sm" onclick="updateStatus('1001')">Save</button>
+                                    <a href="#saved-1001-Pending" class="btn btn-outline-light btn-sm">Pending</a>
+                                    <a href="#saved-1001-Printing" class="btn btn-outline-light btn-sm">Printing</a>
+                                    <a href="#saved-1001-Ready" class="btn btn-outline-light btn-sm">Ready for Pickup</a>
+                                    <a href="#saved-1001-Completed" class="btn btn-primary btn-sm">Completed</a>
                                 </td>
                             </tr>
-                            
+
                             <!-- Mock Data Row 2 -->
                             <tr id="row-1002">
                                 <td>#1002</td>
@@ -75,15 +109,10 @@
                                 <td>Presentation.pptx<br><small class="text-muted">Letter | Glossy</small></td>
                                 <td>1</td>
                                 <td>
-                                    <select class="form-select form-select-sm" id="status-1002">
-                                        <option value="Pending">Pending</option>
-                                        <option value="Printing" selected>Printing</option>
-                                        <option value="Ready">Ready for Pickup</option>
-                                        <option value="Completed">Completed</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <button class="btn btn-primary btn-sm" onclick="updateStatus('1002')">Save</button>
+                                    <a href="#saved-1002-Pending" class="btn btn-outline-light btn-sm">Pending</a>
+                                    <a href="#saved-1002-Printing" class="btn btn-outline-light btn-sm">Printing</a>
+                                    <a href="#saved-1002-Ready" class="btn btn-outline-light btn-sm">Ready for Pickup</a>
+                                    <a href="#saved-1002-Completed" class="btn btn-primary btn-sm">Completed</a>
                                 </td>
                             </tr>
                         </tbody>
@@ -94,29 +123,5 @@
 
     </div>
 
-    <!-- Admin JavaScript Actions -->
-    <script>
-        function logout() {
-            // Return to login
-            window.location.href = 'index.html';
-        }
-
-        function updateStatus(orderId) {
-            // Find the selected dropdown value for the specific order row
-            let statusDropdown = document.getElementById('status-' + orderId);
-            let newStatus = statusDropdown.value;
-            
-            // In a real app, this would send data to your database via backend. 
-            // Here, we just show a front-end alert.
-            alert("Success! Order #" + orderId + " status has been updated to: " + newStatus);
-            
-            // Optional visual feedback: change row color if completed
-            if(newStatus === "Completed") {
-                document.getElementById('row-' + orderId).classList.add("table-success");
-            } else {
-                document.getElementById('row-' + orderId).classList.remove("table-success");
-            }
-        }
-    </script>
 </body>
 </html>

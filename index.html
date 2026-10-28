@@ -32,6 +32,12 @@
             box-shadow: none;
             border: 2px solid #000000;
         }
+        .form-control:user-invalid {
+            border: 2px solid #cc0000;
+        }
+        .required-mark {
+            color: #cc0000;
+        }
         .btn { 
             background-color: #ffffff; 
             color: #000000; 
@@ -49,54 +55,65 @@
             text-decoration: underline; 
             font-weight: bold;
         }
+        /* Show the register message only when the link is clicked */
+        #register-msg {
+            display: none;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+        #register-msg:target {
+            display: block;
+        }
     </style>
 </head>
 <body>
 
-    <!-- Login  -->
+    <!-- Login -->
     <div class="container d-flex justify-content-center">
         <div class="card p-4">
             <h3 class="text-center mb-4" style="font-weight: bold;">System Login</h3>
             
-            <form id="loginForm">
+            <!-- Browser blocks submit until required fields are filled -->
+            <form>
                 <div class="mb-3">
-                    <label for="username" class="form-label" style="font-weight: bold;">Username</label>
-                    <input type="text" class="form-control" id="username" required>
+                    <label for="username" class="form-label" style="font-weight: bold;">
+                        Username <span class="required-mark">*</span>
+                    </label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="username"
+                        name="username"
+                        placeholder="Enter username"
+                        required
+                    >
                 </div>
                 <div class="mb-3">
-                    <label for="password" class="form-label" style="font-weight: bold;">Password</label>
-                    <input type="password" class="form-control" id="password" required>
+                    <label for="password" class="form-label" style="font-weight: bold;">
+                        Password <span class="required-mark">*</span>
+                    </label>
+                    <input
+                        type="password"
+                        class="form-control"
+                        id="password"
+                        name="password"
+                        placeholder="Enter password"
+                        required
+                    >
                 </div>
                 
                 <div class="d-grid gap-3 mt-4">
-                    <button type="button" class="btn" onclick="login('customer')">Login as Customer</button>
-                    <button type="button" class="btn" onclick="login('admin')">Login as Admin</button>
+                    <button type="submit" class="btn" formaction="customer.html">Login as Customer</button>
+                    <button type="submit" class="btn" formaction="admin.html">Login as Admin</button>
                 </div>
                 
                 <div class="text-center mt-4">
-                    <a href="#" onclick="alert('Registration disabled for this demo.')">Register Account</a>
+                    <a href="#register-msg">Register Account</a>
+                    <p id="register-msg">Registration disabled for this demo.</p>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Login Logic -->
-    <script>
-        function login(role) {
-            let user = document.getElementById('username').value;
-            let pass = document.getElementById('password').value;
-
-            if(user === "" || pass === "") {
-                alert("Enter any username and password to proceed.");
-                return;
-            }
-
-            if (role === 'customer') {
-                window.location.href = 'customer.html';
-            } else if (role === 'admin') {
-                window.location.href = 'admin.html';
-            }
-        }
-    </script>
 </body>
 </html>
